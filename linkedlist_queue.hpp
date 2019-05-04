@@ -21,7 +21,9 @@ namespace collection
             linked();
             void push(T const&);
             T pop();
+            int getSize() const;
         private:
+            int size;
             Node<T>* head;
             Node<T>* end;
         };
@@ -31,7 +33,7 @@ namespace collection
 //-------------------------------------------------------------------------
 
 template <class T>
-collection::queue::linked<T>::linked()
+collection::queue::linked<T>::linked() : size(0)
 {
     head = NULL;
     end = NULL;
@@ -57,7 +59,8 @@ void collection::queue::linked<T>::push(T const& input)
 	    temp->link = NULL;
 	    end->link = temp;
         end = temp;
-    }	
+    }
+    ++size;
 }
 
 template <class T>
@@ -69,6 +72,7 @@ T collection::queue::linked<T>::pop()
         {
             throw -1;
         }
+        --size;
         Node<T>* temp_n = head->link;
         T temp_i = head->data;
         delete head;
@@ -79,8 +83,12 @@ T collection::queue::linked<T>::pop()
     {
         std::cerr << "Error " << e << ". Empty list!" << std::endl;
     }
-    
-    
+}
+
+template <class T>
+int collection::queue::linked<T>::getSize() const
+{
+    return size;
 }
 
 #endif

@@ -1,6 +1,6 @@
 appname := test
 
-CXX := g++
+CXX := g++-8
 CXXFLAGS := -Wall -g
 
 srcfiles := $(shell find . -maxdepth 1 -name "*.cpp")

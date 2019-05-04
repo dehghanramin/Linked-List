@@ -21,7 +21,9 @@ namespace collection
             linked();
             void push(T const&);
             T pop();
+            size_t getSize() const;
         private:
+            size_t size;
             Node<T>* head;
             Node<T>* end;
         };
@@ -45,7 +47,8 @@ void collection::stack::linked<T>::push(T const& input)
 	temp = new Node<T>;
 	temp->data = input;
 	temp->link = head;
-    head = temp;    
+    head = temp;
+    ++size;  
 }
 
 template <class T>
@@ -57,6 +60,7 @@ T collection::stack::linked<T>::pop()
         {
             throw -1;
         }
+        --size;
         Node<T>* temp_n = head->link;
         T temp_i = head->data;
         delete head;
@@ -69,6 +73,10 @@ T collection::stack::linked<T>::pop()
     }
 }
 
-
+template <class T>
+size_t collection::stack::linked<T>::getSize() const
+{
+    return size;
+}
 
 #endif
