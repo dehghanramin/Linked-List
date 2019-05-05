@@ -21,10 +21,10 @@
 *.smod
 
 # Compiled Static libraries - Will contain static libraries
-# *.lai
-# *.la
-# *.a
-# *.lib
+*.lai
+*.la
+*.a
+*.lib
 
 # Executables
 *.exe
