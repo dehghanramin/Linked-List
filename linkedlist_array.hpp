@@ -11,7 +11,8 @@ namespace collection
         struct Node
         {
             T data;
-            Node<T>* link;
+            Node<T>* link_next;
+            Node<T>* link_previous;
         };
 
         template <class T>
@@ -19,10 +20,11 @@ namespace collection
         {
         public:
             linked();
-            void push(T const&);
-            T pop();
-            T& operator[](short const&) const;
+            ~linked();
+            void index_back(T const&);
+            T& operator[](size_t const&);
         private:
+            size_t size;
             Node<T>* head;
             Node<T>* end;
         };
@@ -31,23 +33,46 @@ namespace collection
 //-------------------------------------------------------------------------
 
 template <class T>
-collection::array::linked<T>::linked()
+collection::array::linked<T>::linked() : size(0)
 {
     head = NULL;
     end = NULL;
 }
 
+template <class T>
+collection::array::linked<T>::~linked()
+{
+    try
+    {
+        while (head != NULL)
+        {
+            Node<T>* next = head->link_next;
+            if (next == NULL) throw -1;
+            head = next;
+            delete head->link_previous;
+        }
+    }
+    catch(int const& e)
+    {
+        delete head;
+        head = NULL;
+        end = NULL;
+    }
+    
+    
+}
 
 
 template <class T>
-void collection::array::linked<T>::push(T const& input)
+void collection::array::linked<T>::index_back(T const& input)
 {
     if (head == NULL)
     {
         Node<T>* temp;
         temp = new Node<T>;
         temp->data = input;
-        temp->link = NULL;
+        temp->link_next = NULL;
+        temp->link_previous = head;
         head = temp;
         end = temp;
     }
@@ -56,63 +81,62 @@ void collection::array::linked<T>::push(T const& input)
         Node<T>* temp;
 	    temp = new Node<T>;
 	    temp->data = input;
-	    temp->link = NULL;
-	    end->link = temp;
+	    temp->link_next = NULL;
+        temp->link_previous = end;
+	    end->link_next = temp;
         end = temp;
     }	
 }
 
+
+
 template <class T>
-T collection::array::linked<T>::pop()
+T& collection::array::linked<T>::operator[](size_t const& index)
 {
+    const size_t kIndexMiddle = (size-1)/2;
     try
     {
-        if (head == NULL)
+        if (index < kIndexMiddle)
         {
-            throw -1;
-        }
-        Node<T>* temp_n = head->link;
-        T temp_i = head->data;
-        delete head;
-        head = temp_n;
-        return temp_i;
-    }
-    catch(short const& e)
-    {
-        std::cerr << "Error " << e << ". Empty list!" << std::endl;
-    }
-    
-    
-}
-
-
-template <class T>
-T& collection::array::linked<T>::operator[](short const& index) const
-{
-    Node<T>* current = head;
-    short count = 0;
-    try
-    {
-        while (current != NULL)  
-        {  
-            if (count == index)
-            {
-                return(current->data);
+            size_t count = 0;
+            Node<T>* current = head;
+            while (current != NULL)  
+            {  
+                if (count == index)
+                {
+                    return(current->data);
+                }
+                else if (current->link_next == NULL)
+                {
+                    throw -1;
+                }   
+                ++count;  
+                current = current->link_next;  
             }
-            else if (current->link == NULL)
-            {
-                throw -1;
-            }   
-            ++count;  
-            current = current->link;  
+        }
+        else
+        {
+            size_t count = size-1;
+            Node<T>* current = end;
+            while (current != NULL)  
+            {  
+                if (count == index)
+                {
+                    return(current->data);
+                }
+                else if (current->link_previous == head)
+                {
+                    throw -1;
+                }   
+                --count;  
+                current = current->link_previous;  
+            }
         }
     }
     catch(short const& e)
     {
         std::cerr << "Out of bound!" << std::endl;
     }
-    
-    
 }
 
 
