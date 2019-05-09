@@ -206,5 +206,5 @@ void collection::array::linked<T>::dealloc()
     }
 }
 
-collection::array::linked<int> x;
+
 #endif
