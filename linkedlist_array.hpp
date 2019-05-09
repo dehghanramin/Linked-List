@@ -1,7 +1,7 @@
 #ifndef _LINKEDLIST_HPP_
 #define _LINKEDLIST_HPP_
 #include <cstddef>
-#include <iostream>
+#include <stdlib.h>
 
 namespace collection
 {
@@ -23,6 +23,9 @@ namespace collection
             ~linked();
             void index_back(T const&);
             T& operator[](size_t const&);
+            void alloc(size_t const&);
+            void dealloc(size_t const&);
+            void dealloc();
         private:
             size_t size;
             Node<T>* head;
@@ -85,7 +88,8 @@ void collection::array::linked<T>::index_back(T const& input)
         temp->link_previous = end;
 	    end->link_next = temp;
         end = temp;
-    }	
+    }
+    ++size;
 }
 
 
@@ -135,9 +139,72 @@ T& collection::array::linked<T>::operator[](size_t const& index)
     }
     catch(short const& e)
     {
-        std::cerr << "Out of bound!" << std::endl;
+        exit(1);
+    }
+}
+
+template <class T>
+void collection::array::linked<T>::alloc(size_t const& l)
+{
+    for (size_t i = 0; i < l; ++i)
+    {
+        if (head == NULL)
+        {
+            Node<T>* temp;
+            temp = new Node<T>;
+            temp->link_next = NULL;
+            temp->link_previous = head;
+            head = temp;
+            end = temp;
+        }
+        else
+        {
+            Node<T>* temp;
+            temp = new Node<T>;
+            temp->link_next = NULL;
+            temp->link_previous = end;
+            end->link_next = temp;
+            end = temp;
+        }
+        ++size;
     }
 }
 
 
+template <class T>
+void collection::array::linked<T>::dealloc(size_t const& l)
+{
+    if (size)
+    {
+        size_t i = 0;
+        while ((end != head) && (i < l))
+        {
+            Node<T>* temp = end->link_previous;
+            delete end;
+            end = temp;
+            ++i;
+        }
+        --size;
+    }
+}
+
+template <class T>
+void collection::array::linked<T>::dealloc()
+{
+    if (size)
+    {
+        while (end != head)
+        {
+            Node<T>* temp = end->link_previous;
+            delete end;
+            end = temp;
+        }
+        delete end;
+        end = NULL;
+        head = NULL;
+        --size;
+    }
+}
+
+collection::array::linked<int> x;
 #endif

@@ -1,11 +1,25 @@
-#include "linkedlist_stack.hpp"
+#include "linkedlist_array.hpp"
+#include <string>
 #include <iostream>
 
-int main(int argc, char const *argv[])
+
+int main(void)
 {
-    collection::stack::linked<int> list;
-    list.push(12);
-    std::cout << list.pop() << std::endl;
-    std::cout << "Size: " << list.getSize() << std::endl;
+    collection::array::linked<int> list;
+    list.alloc(10);
+    // for (short i = 1; i < 10; ++i)
+    // {
+    //     list.index_back(i);
+    // }
+    for (short i = 0; i < 10; ++i)
+    {
+        std::cout << list[i] << std::endl;
+    }
+    list.dealloc();
+    std::cout << "deallocated" << std::endl;
+    // for (short i = 0; i < 4; ++i)
+    // {
+    //     std::cout << list[i] << std::endl;
+    // }
     return 0;
 }
